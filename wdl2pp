@@ -563,5 +563,7 @@ EOF
 }
 
 ## Defer setup until we have the complete script
+
 vpnsetup "$@"
+
 exit 0
