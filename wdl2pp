@@ -566,4 +566,4 @@ EOF
 
 vpnsetup "$@"
 
-exit 0
+exit "$status"
