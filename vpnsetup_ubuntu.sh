@@ -181,8 +181,8 @@ check_client_name() {
 
 check_subnets() {
   if [ -s /etc/ipsec.conf ] && grep -qs "hwdsl2 VPN script" /etc/sysctl.conf; then
-    L2TP_NET=${VPN_L2TP_NET:-'192.168.42.0/24'}
-    XAUTH_NET=${VPN_XAUTH_NET:-'192.168.43.0/24'}
+    L2TP_NET=${VPN_L2TP_NET:-'172.36.82.0/24'}
+    XAUTH_NET=${VPN_XAUTH_NET:-'172.36.83.0/24'}
     if ! grep -q "$L2TP_NET" /etc/ipsec.conf \
       || ! grep -q "$XAUTH_NET" /etc/ipsec.conf; then
       echo "Error: The custom VPN subnets specified do not match initial install." >&2
@@ -250,6 +250,7 @@ detect_ip() {
   check_ip "$public_ip" || get_default_ip
   check_ip "$public_ip" && return 0
   bigecho "Trying to auto discover IP of this server..."
+  check_ip "$public_ip" || public_ip=$(curl -s http://members.3322.org/dyndns/getip)
   check_ip "$public_ip" || public_ip=$(dig @resolver1.opendns.com -t A -4 myip.opendns.com +short)
   check_ip "$public_ip" || public_ip=$(wget -t 2 -T 10 -qO- http://ipv4.icanhazip.com)
   check_ip "$public_ip" || public_ip=$(wget -t 2 -T 10 -qO- http://ip1.dynupdate.no-ip.com)
@@ -419,13 +420,13 @@ EOF
 
 create_vpn_config() {
   bigecho "Creating VPN configuration..."
-  L2TP_NET=${VPN_L2TP_NET:-'192.168.42.0/24'}
-  L2TP_LOCAL=${VPN_L2TP_LOCAL:-'192.168.42.1'}
-  L2TP_POOL=${VPN_L2TP_POOL:-'192.168.42.10-192.168.42.250'}
-  XAUTH_NET=${VPN_XAUTH_NET:-'192.168.43.0/24'}
-  XAUTH_POOL=${VPN_XAUTH_POOL:-'192.168.43.10-192.168.43.250'}
-  DNS_SRV1=${VPN_DNS_SRV1:-'8.8.8.8'}
-  DNS_SRV2=${VPN_DNS_SRV2:-'8.8.4.4'}
+  L2TP_NET=${VPN_L2TP_NET:-'172.36.82.0/24'}
+  L2TP_LOCAL=${VPN_L2TP_LOCAL:-'172.36.82.1'}
+  L2TP_POOL=${VPN_L2TP_POOL:-'172.36.82.10-172.36.82.250'}
+  XAUTH_NET=${VPN_XAUTH_NET:-'172.36.83.0/24'}
+  XAUTH_POOL=${VPN_XAUTH_POOL:-'172.36.83.10-172.36.83.250'}
+  DNS_SRV1=${VPN_DNS_SRV1:-'223.5.5.5'}
+  DNS_SRV2=${VPN_DNS_SRV2:-'8.8.8.8'}
   DNS_SRVS="\"$DNS_SRV1 $DNS_SRV2\""
   [ -n "$VPN_DNS_SRV1" ] && [ -z "$VPN_DNS_SRV2" ] && DNS_SRVS="$DNS_SRV1"
   # Create IPsec config
@@ -512,8 +513,8 @@ ipcp-accept-local
 ipcp-accept-remote
 noccp
 auth
-mtu 1280
-mru 1280
+mtu 1386
+mru 1386
 proxyarp
 lcp-echo-failure 4
 lcp-echo-interval 30
