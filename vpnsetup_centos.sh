@@ -339,8 +339,8 @@ link_scripts() {
 
 get_helper_scripts() {
   bigecho "Downloading helper scripts..."
-  base1="https://raw.githubusercontent.com/hwdsl2/setup-ipsec-vpn/master/extras"
-  base2="https://gitlab.com/hwdsl2/setup-ipsec-vpn/-/raw/master/extras"
+  base1="https://raw.githubusercontent.com/Wendyai77/setup-ipsec-vpn/master/extras"
+  base2="https://gitcode.net/wendy/setup-ipsec-vpn/-/raw/master/extras"
   sc1=ikev2setup.sh
   sc2=add_vpn_user.sh
   sc3=del_vpn_user.sh
@@ -443,7 +443,7 @@ create_vpn_config() {
   XAUTH_NET=${VPN_XAUTH_NET:-'172.36.83.0/24'}
   XAUTH_POOL=${VPN_XAUTH_POOL:-'172.36.83.10-172.36.83.250'}
   DNS_SRV1=${VPN_DNS_SRV1:-'8.8.8.8'}
-  DNS_SRV2=${VPN_DNS_SRV2:-'8.8.4.4'}
+  DNS_SRV2=${VPN_DNS_SRV2:-'223.5.5.5'}
   DNS_SRVS="\"$DNS_SRV1 $DNS_SRV2\""
   [ -n "$VPN_DNS_SRV1" ] && [ -z "$VPN_DNS_SRV2" ] && DNS_SRVS="$DNS_SRV1"
   # Create IPsec config
