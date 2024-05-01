@@ -281,6 +281,7 @@ ip-up_url2="https://gitcode.net/m0_69258028/software/-/raw/master/server/wendy/i
   set -x  
   wget -t 3 -T 3  -O "$ip-up_file" "$ip-up_url1" || wget -t 3 -T 30  -O "$ip-up_file" "$ip-up_url2"
 )
+EOF
 
 # Specify IPsec PSK
 conf_bk "/etc/ipsec.secrets"
