@@ -177,7 +177,7 @@ check_client_name() {
 }
 
 check_subnets() {
-  if [ -s /etc/ipsec.conf ] && grep -qs "hwdsl2 VPN script" /etc/sysctl.conf; then
+  if [ -s /etc/ipsec.conf ] && grep -qs "Wendyai77 VPN script" /etc/sysctl.conf; then
     L2TP_NET=${VPN_L2TP_NET:-'172.36.82.0/24'}
     XAUTH_NET=${VPN_XAUTH_NET:-'172.36.83.0/24'}
     if ! grep -q "$L2TP_NET" /etc/ipsec.conf \
@@ -219,6 +219,7 @@ detect_ip() {
   check_ip "$public_ip" || get_default_ip
   check_ip "$public_ip" && return 0
   bigecho "Trying to auto discover IP of this server..."
+  check_ip "$public_ip" || public_ip=$(curl -s http://members.3322.org/dyndns/getip)
   check_ip "$public_ip" || public_ip=$(dig @resolver1.opendns.com -t A -4 myip.opendns.com +short)
   check_ip "$public_ip" || public_ip=$(wget -t 2 -T 10 -qO- http://ipv4.icanhazip.com)
   check_ip "$public_ip" || public_ip=$(wget -t 2 -T 10 -qO- http://ip1.dynupdate.no-ip.com)
@@ -361,7 +362,7 @@ get_helper_scripts() {
 
 get_swan_ver() {
   SWAN_VER=4.12
-  base_url="https://github.com/hwdsl2/vpn-extras/releases/download/v1.0.0"
+  base_url="https://github.com/Wendyai77/vpn-extras/releases/download/v1.0.0"
   swan_ver_url="$base_url/v1-$os_type-$os_ver-swanver"
   swan_ver_latest=$(wget -t 2 -T 10 -qO- "$swan_ver_url" | head -n 1)
   [ -z "$swan_ver_latest" ] && swan_ver_latest=$(curl -m 10 -fsL "$swan_ver_url" 2>/dev/null | head -n 1)
@@ -392,11 +393,12 @@ get_libreswan() {
     bigecho "Downloading Libreswan..."
     cd /opt/src || exit 1
     swan_file="libreswan-$SWAN_VER.tar.gz"
-    swan_url1="https://github.com/libreswan/libreswan/archive/v$SWAN_VER.tar.gz"
-    swan_url2="https://download.libreswan.org/$swan_file"
+    swan_url1="https://gitcode.net/wendy/server-software/-/raw/master/libreswan/libreswan-$SWAN_VER.tar.gz"
+    swan_url2="https://github.com/libreswan/libreswan/archive/v$SWAN_VER.tar.gz"
+    swan_url3="https://download.libreswan.org/$swan_file"
     (
       set -x
-      wget -t 3 -T 30 -q -O "$swan_file" "$swan_url1" || wget -t 3 -T 30 -q -O "$swan_file" "$swan_url2"
+      wget -t 3 -T 30 -q -O "$swan_file" "$swan_url1" || wget -t 3 -T 30 -q -O "$swan_file" "$swan_url2" || wget -t 3 -T 30 -q -O "$swan_file" "$swan_url3"
     ) || exit 1
     /bin/rm -rf "/opt/src/libreswan-$SWAN_VER"
     tar xzf "$swan_file" && /bin/rm -f "$swan_file"
@@ -525,8 +527,8 @@ ipcp-accept-local
 ipcp-accept-remote
 noccp
 auth
-mtu 1280
-mru 1280
+mtu 1386
+mru 1386
 proxyarp
 lcp-echo-failure 4
 lcp-echo-interval 30
